@@ -1,33 +1,208 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-MX">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Gasolana — Soporte</title>
-  <style>
-    body { font-family: -apple-system, system-ui, sans-serif; max-width: 640px; margin: 0 auto; padding: 2rem 1.25rem; line-height: 1.6; color: #1a1a1a; }
-    h1 { font-size: 1.6rem; } h2 { font-size: 1.15rem; margin-top: 2rem; }
-    a { color: #0a7d33; }
-    footer { margin-top: 3rem; font-size: .85rem; color: #666; }
-    @media (prefers-color-scheme: dark) { body { background: #111; color: #eee; } a { color: #4cc472; } footer { color: #999; } }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gasolana · Gasolina barata cerca de ti</title>
+<meta name="description" content="Gasolana te muestra las 3 gasolineras más baratas cerca de ti en México, con precios oficiales de la CNE corregidos por la comunidad desde la bomba. Gratis.">
+<meta property="og:title" content="Gasolana · Gasolina barata cerca de ti">
+<meta property="og:description" content="Las 3 gasolineras más baratas cerca de ti. Precios oficiales, corregidos por la comunidad. Gratis.">
+<meta property="og:image" content="https://gasolana.com.mx/img/01-mapa.jpg">
+<meta property="og:url" content="https://gasolana.com.mx/">
+<meta name="theme-color" content="#0A0E14">
+<link rel="icon" href="img/icon.png">
+<link rel="apple-touch-icon" href="img/icon.png">
+<style>
+  :root {
+    --bg: #0A0E14; --surface: #121821; --elevated: #1A222D; --outline: #2A3544;
+    --fg: #F4F6F8; --secondary: #9AA8B8; --muted: #5C6B7A;
+    --accent: #39FF14; --accent-dim: #2BC410;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; color: var(--fg); }
+  .brand img { width: 34px; height: 34px; border-radius: 9px; }
+  nav a { color: var(--secondary); font-size: 14px; margin-left: 20px; }
+  nav a:hover { color: var(--fg); text-decoration: none; }
+
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 48px 0 24px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--outline); background: var(--elevated);
+             border-radius: 999px; padding: 6px 12px; font-size: 12px; color: var(--secondary); }
+  .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+  h1 { font-size: clamp(34px, 5.2vw, 58px); line-height: 1.05; letter-spacing: -.02em; margin: 18px 0 14px; }
+  h1 em { font-style: normal; color: var(--accent); }
+  .lead { color: var(--secondary); font-size: 18px; max-width: 46ch; margin: 0 0 26px; }
+  .stores { display: flex; flex-wrap: wrap; gap: 10px; }
+  .store { display: inline-flex; align-items: center; gap: 10px; border: 1px solid var(--outline); background: var(--surface);
+           color: var(--fg); border-radius: 12px; padding: 10px 16px; font-size: 14px; line-height: 1.1; }
+  .store:hover { text-decoration: none; border-color: var(--secondary); }
+  .store small { display: block; color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+  .store b { font-size: 15px; }
+  .store svg { width: 22px; height: 22px; fill: var(--fg); flex: none; }
+  .soon { color: var(--muted); font-size: 12px; margin-top: 10px; }
+
+  .phone { position: relative; justify-self: center; width: min(320px, 80vw); aspect-ratio: 1320/2868; border-radius: 42px;
+           background: #000; padding: 10px; box-shadow: 0 30px 80px rgba(57,255,20,.10), 0 10px 30px rgba(0,0,0,.6); border: 1px solid #222; }
+  .phone img { width: 100%; height: 100%; object-fit: cover; border-radius: 34px; display: block; }
+  .phone::before { content: ""; position: absolute; left: 50%; top: 18px; transform: translateX(-50%); width: 34%; height: 24px; background: #000; border-radius: 999px; z-index: 2; }
+
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 36px 0 0; }
+  .stat { border: 1px solid var(--outline); background: var(--surface); border-radius: 16px; padding: 16px 18px; }
+  .stat b { display: block; font-size: 26px; color: var(--accent); letter-spacing: -.02em; }
+  .stat span { color: var(--secondary); font-size: 13px; }
+
+  section { padding: 64px 0 0; }
+  h2 { font-size: clamp(24px, 3.2vw, 34px); letter-spacing: -.02em; margin: 0 0 8px; }
+  .sub { color: var(--secondary); margin: 0 0 28px; max-width: 60ch; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+  .card { border: 1px solid var(--outline); background: var(--surface); border-radius: 18px; padding: 20px; }
+  .card .ic { width: 40px; height: 40px; border-radius: 12px; background: rgba(57,255,20,.10); display: grid; place-items: center; margin-bottom: 12px; }
+  .card .ic svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--secondary); font-size: 14px; }
+
+  .shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .shot { border-radius: 22px; overflow: hidden; border: 1px solid var(--outline); background: #000; }
+  .shot img { width: 100%; display: block; }
+  .shot figcaption { padding: 10px 12px 12px; font-size: 13px; color: var(--secondary); }
+  .shot figcaption b { display: block; color: var(--fg); font-size: 14px; margin-bottom: 2px; }
+
+  .steps { counter-reset: s; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .step { border: 1px solid var(--outline); border-radius: 18px; padding: 20px; background: var(--surface); position: relative; }
+  .step::before { counter-increment: s; content: counter(s); position: absolute; top: 16px; right: 18px; width: 28px; height: 28px; border-radius: 50%;
+                  background: var(--accent); color: var(--bg); font-weight: 800; font-size: 14px; display: grid; place-items: center; }
+  .step h3 { margin: 0 0 6px; font-size: 16px; padding-right: 36px; }
+  .step p { margin: 0; color: var(--secondary); font-size: 14px; }
+
+  .pro { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .plan { border: 1px solid var(--outline); border-radius: 18px; padding: 22px; background: var(--surface); }
+  .plan.hi { border-color: var(--accent-dim); box-shadow: 0 0 0 1px rgba(57,255,20,.25) inset; }
+  .plan h3 { margin: 0 0 4px; font-size: 18px; }
+  .plan .price { color: var(--secondary); font-size: 13px; margin-bottom: 14px; }
+  .plan ul { margin: 0; padding: 0; list-style: none; }
+  .plan li { font-size: 14px; color: var(--secondary); padding: 6px 0 6px 26px; position: relative; }
+  .plan li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+  .plan li.no::before { content: "–"; color: var(--muted); }
+
+  .fine { border: 1px solid var(--outline); border-radius: 18px; padding: 20px 22px; background: var(--surface); color: var(--secondary); font-size: 13px; }
+  .fine p { margin: 0 0 10px; } .fine p:last-child { margin: 0; }
+  .fine b { color: var(--fg); }
+
+  footer { margin-top: 64px; padding: 26px 0 40px; border-top: 1px solid var(--outline); color: var(--muted); font-size: 13px;
+           display: flex; flex-wrap: wrap; gap: 10px 22px; align-items: center; justify-content: space-between; }
+  footer .links a { color: var(--secondary); margin-right: 18px; }
+
+  @media (max-width: 820px) {
+    .hero { grid-template-columns: 1fr; padding-top: 28px; }
+    .phone { order: -1; width: min(260px, 70vw); }
+    .strip, .steps, .pro { grid-template-columns: 1fr; }
+    .shots { grid-template-columns: repeat(2, 1fr); }
+    nav a { margin-left: 14px; }
+    nav .hide { display: none; }
+  }
+</style>
 </head>
 <body>
-  <h1>⛽️ Gasolana</h1>
-  <p>Encuentra la gasolina más barata cerca de ti, con precios oficiales de la CNE actualizados cada 6 horas y correcciones reportadas por la comunidad desde la bomba.</p>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="img/icon.png" alt="" width="34" height="34">Gasolana</a>
+    <nav>
+      <a class="hide" href="#como">Cómo funciona</a>
+      <a class="hide" href="#pro">Pro</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="mailto:angel@endlessaccess.org">Contacto</a>
+    </nav>
+  </header>
 
-  <h2>Soporte</h2>
-  <p>¿Tienes un problema con la app, un precio incorrecto o una sugerencia? Escríbenos y te respondemos lo antes posible:</p>
-  <p><a href="mailto:angel@endlessaccess.org">angel@endlessaccess.org</a></p>
+  <section class="hero" style="padding-top:36px">
+    <div>
+      <span class="eyebrow"><i></i> Precios oficiales actualizados cada 6 horas</span>
+      <h1>¿En qué gasolinera <em>conviene cargar</em> hoy?</h1>
+      <p class="lead">Gasolana te muestra las 3 más baratas cerca de ti, con precios oficiales corregidos por la comunidad desde la bomba, y te dice cuál te conviene de verdad contando el tráfico.</p>
+      <div class="stores">
+        <a class="store" href="#" aria-disabled="true" title="Muy pronto en App Store">
+          <svg viewBox="0 0 24 24"><path d="M16.37 12.6c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.4-.1-2.8.9-3.5.9-.7 0-1.9-.8-3.1-.8-1.6 0-3.1.9-3.9 2.4-1.7 2.9-.4 7.2 1.2 9.6.8 1.2 1.8 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.1.8 1.3 0 2.1-1.2 2.9-2.4.9-1.3 1.3-2.6 1.3-2.7 0 0-2.7-1-2.7-4.1zM14.1 5.8c.6-.8 1.1-1.9.9-3-.9 0-2 .6-2.7 1.4-.6.7-1.1 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
+          <span><small>Muy pronto en</small><b>App Store</b></span>
+        </a>
+        <a class="store" href="#" aria-disabled="true" title="Muy pronto en Google Play">
+          <svg viewBox="0 0 24 24"><path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.7 2.2l-.1.1zm12.5 12.6-3.1-3.1v-.2l3.1-3.1.1.1 3.7 2.1c1 .6 1 1.6 0 2.2l-3.7 2.1-.1-.1zM4.4 22.4l11.7-6.6-3.1-3.1-8.6 9.7zm0-20.8 8.6 9.7 3.1-3.1L4.4 1.6z"/></svg>
+          <span><small>Muy pronto en</small><b>Google Play</b></span>
+        </a>
+      </div>
+      <p class="soon">Gratis. Sin registro para consultar. Hecha en México.</p>
+    </div>
+    <div class="phone"><img src="img/01-mapa.jpg" alt="Gasolana mostrando las 3 gasolineras más baratas en un mapa de la Ciudad de México"></div>
+  </section>
 
-  <h2>Preguntas frecuentes</h2>
-  <p><strong>¿De dónde salen los precios?</strong> Del feed público de la Comisión Nacional de Energía (CNE), que las gasolineras reportan por obligación. Usuarios registrados pueden corregir el precio si en la bomba es distinto.</p>
-  <p><strong>¿La app es gratis?</strong> Sí. Se mantiene con publicidad.</p>
-  <p><strong>¿Necesito cuenta?</strong> Solo para reportar precios. Consultar precios no requiere registro.</p>
+  <div class="strip">
+    <div class="stat"><b>+15,000</b><span>gasolineras de todo México con precio oficial</span></div>
+    <div class="stat"><b>6 h</b><span>frecuencia de actualización del reporte obligatorio a la CNE</span></div>
+    <div class="stat"><b>12 h</b><span>tu corrección desde la bomba gana sobre el precio oficial</span></div>
+  </div>
 
-  <h2>Privacidad</h2>
-  <p>Consulta nuestra <a href="privacidad.html">política de privacidad</a>.</p>
+  <section id="como">
+    <h2>Lo que hace, sin rodeos</h2>
+    <p class="sub">Una sola pantalla: el mapa con tu zona y las tres opciones más baratas para tu combustible. Tocas "Ir" y abre tu navegador favorito.</p>
+    <div class="grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.2 7-12a7 7 0 1 0-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div><h3>Las 3 más baratas cerca de ti</h3><p>Magna, Premium o Diésel, en 1, 3 o 5 km. Filtra por marca si tienes una de confianza.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V9a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v11M15 11h2a2 2 0 0 1 2 2v3a1.5 1.5 0 0 0 3 0v-5l-2-2"/></svg></div><h3>Corregidos desde la bomba</h3><p>Si el precio real es otro, cualquier usuario registrado lo corrige en segundos y se muestra de inmediato. Tu reporte gana 12 horas.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><h3>Mejor opción con tráfico</h3><p>La más barata no siempre es la que más te conviene. Calculamos el tiempo real de llegada y te señalamos la mejor opción.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.4 8 9 4.6-.6 8-4 8-9V6l-8-3z"/><path d="m9 12 2 2 4-4"/></svg></div><h3>Litros de a litro</h3><p>Sellos con las verificaciones de PROFECO: qué estaciones despachan completo y cuáles tuvieron faltantes.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 19 9 5l6 14 5-14"/></svg></div><h3>Modo Viaje</h3><p>Dinos a dónde vas y te decimos qué gasolineras te quedan de paso en la ruta, sin desviarte.</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h12"/></svg></div><h3>Tu bitácora de cargas</h3><p>Registra cuántos litros cargaste y ve cuánto llevas ahorrado este mes contra las otras opciones que tenías enfrente.</p></div>
+    </div>
+  </section>
 
-  <footer>© 2026 Gasolana</footer>
+  <section>
+    <h2>Así se ve</h2>
+    <p class="sub">Oscura, directa y sin anuncios encima del mapa.</p>
+    <div class="shots">
+      <figure class="shot" style="margin:0"><img src="img/02-mapa-pro.jpg" alt="Mapa con sellos PROFECO y mejor opción con tráfico" loading="lazy"><figcaption><b>Mapa</b>Sellos PROFECO y mejor opción con tráfico</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="img/03-viaje.jpg" alt="Modo viaje con ruta y gasolineras de paso" loading="lazy"><figcaption><b>Viaje</b>Gasolineras de paso en tu ruta</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="img/04-reportar.jpg" alt="Pantalla para reportar el precio de la bomba" loading="lazy"><figcaption><b>Reportar</b>Corrige el precio en segundos</figcaption></figure>
+      <figure class="shot" style="margin:0"><img src="img/05-perfil.jpg" alt="Perfil con la bitácora de cargas y el ahorro del mes" loading="lazy"><figcaption><b>Perfil</b>Tus cargas y tu ahorro</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <h2>Cómo funciona</h2>
+    <p class="sub">Sin registro para consultar. Solo pedimos cuenta para reportar precios y llevar tu bitácora.</p>
+    <div class="steps">
+      <div class="step"><h3>Abre la app</h3><p>Con tu ubicación te muestra las 3 gasolineras más baratas de tu combustible en el radio que elijas.</p></div>
+      <div class="step"><h3>Elige y ve</h3><p>Toca "Ir" y se abre Apple Maps, Google Maps o Waze con la ruta. Al llegar, te preguntamos cuántos litros cargaste.</p></div>
+      <div class="step"><h3>Corrige si hace falta</h3><p>¿La bomba marca otro precio? Repórtalo desde la estación. Tu dato gana 12 horas y ayuda a los demás.</p></div>
+    </div>
+  </section>
+
+  <section id="pro">
+    <h2>Gratis para siempre. Pro si quieres más.</h2>
+    <p class="sub">El plan gratis tiene todo lo necesario para ahorrar. Pro quita los anuncios y agrega las funciones que usan los que cargan mucho.</p>
+    <div class="pro">
+      <div class="plan"><h3>Gratis</h3><div class="price">$0 · con anuncios</div>
+        <ul><li>Las 3 más baratas cerca de ti</li><li>Precios oficiales + correcciones de la comunidad</li><li>Reportar precios y bitácora de cargas</li><li>Modo Viaje y sellos PROFECO viendo un video corto</li><li class="no">Mejor opción con tráfico en vivo</li><li class="no">Alertas de precio</li></ul></div>
+      <div class="plan hi"><h3>Pro</h3><div class="price">Suscripción mensual · cancela cuando quieras</div>
+        <ul><li>Todo lo de Gratis, sin anuncios ni videos</li><li>Mejor opción real: precio + tráfico en vivo + desvío</li><li>Sellos PROFECO siempre visibles</li><li>Filtro por marca y radio guardados</li><li>Alertas cuando baje el precio en tu zona</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="fine">
+      <p><b>De dónde salen los datos.</b> Los precios provienen de la información pública de la Comisión Nacional de Energía (CNE), que las gasolineras están obligadas a reportar: <a href="https://www.cne.gob.mx/ConsultaPrecios/Index.html" rel="noopener">cne.gob.mx</a>. Los sellos de litros completos provienen de la Procuraduría Federal del Consumidor (PROFECO): <a href="https://combustibles.profeco.gob.mx/" rel="noopener">combustibles.profeco.gob.mx</a>. Los horarios provienen de © colaboradores de OpenStreetMap. Los precios también pueden ser corregidos por usuarios y pueden variar respecto a la bomba.</p>
+      <p><b>Aviso de independencia.</b> Gasolana es una aplicación independiente. No está afiliada, patrocinada ni avalada por la CNE, PROFECO ni ninguna entidad del Gobierno de México, y no representa a ninguna autoridad gubernamental.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="links"><a href="privacidad.html">Política de privacidad</a><a href="eliminar-datos.html">Eliminar mi cuenta y datos</a><a href="mailto:angel@endlessaccess.org">Soporte</a></div>
+    <div>© 2026 Gasolana · Hecha en México</div>
+  </footer>
+</div>
 </body>
 </html>
